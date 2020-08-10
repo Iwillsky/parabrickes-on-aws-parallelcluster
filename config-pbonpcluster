@@ -1,0 +1,45 @@
+[aws]
+aws_region_name = us-east-2
+
+[global]
+cluster_template = final3e
+update_check = false
+sanity_check = true
+
+[aliases]
+ssh = ssh {CFN_USER}@{MASTER_IP} {ARGS}
+
+[cluster final3e]
+key_name = Ohiokey1
+base_os = ubuntu1804
+scheduler = slurm
+master_instance_type = m5.xlarge
+master_root_volume_size = 80
+compute_instance_type = g4dn.12xlarge
+compute_root_volume_size = 80
+initial_queue_size = 2
+max_queue_size = 3
+maintain_initial_size = true
+cluster_type = ondemand
+custom_ami = ami-0582a76708d0397fa
+post_install = https://awshcls.s3.cn-northwest-1.amazonaws.com.cn/parabricks-on-awspcluster/pbnoderun.sh
+vpc_settings = default
+fsx_settings = custom-fsx
+cw_log_settings = custom-cw
+extra_json = { "cluster" : { "ganglia_enabled" : "yes" } }
+
+[vpc default]
+vpc_id = vpc-97fff9ff
+master_subnet_id = subnet-c80b6cb2
+compute_subnet_id = subnet-c80b6cb2
+
+[fsx custom-fsx]
+shared_dir = /paradata
+storage_capacity = 7200
+#fsx_fs_id = fs-0eb29708e92764598
+#export_path = s3://bucket/yourexportpath
+#import_path = s3://bucket/yourimportpath
+
+[cw_log custom-cw]
+enable = true
+retention_days = 7
